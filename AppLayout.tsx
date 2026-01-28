@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { useAuth } from "@/_core/hooks/useAuth";
+import { useAuth } from "./useAuth";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
-import { Github, Code2, Settings, LogOut, Menu, X } from "lucide-react";
+import { Github, Code2, Settings, Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -10,7 +10,7 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const { user, logout } = useAuth();
+  const { user } = useAuth();
   const [, navigate] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
@@ -73,15 +73,6 @@ export function AppLayout({ children }: AppLayoutProps) {
               <p className="text-slate-500">{user?.email}</p>
             </div>
           )}
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => logout()}
-            className="w-full justify-start text-red-400 hover:text-red-300 hover:bg-slate-800"
-          >
-            <LogOut className="w-4 h-4" />
-            {sidebarOpen && <span>Logout</span>}
-          </Button>
         </div>
       </aside>
 

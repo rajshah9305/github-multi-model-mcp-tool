@@ -1,35 +1,30 @@
 import { Toaster } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import NotFound from "@/pages/NotFound";
-import Login from "@/pages/Login";
 import { Route, Switch } from "wouter";
-import ErrorBoundary from "./components/ErrorBoundary";
-import { ThemeProvider } from "./contexts/ThemeContext";
-import { AppLayout } from "./components/AppLayout";
-import { ProtectedRoute } from "./components/ProtectedRoute";
-import Dashboard from "./pages/Dashboard";
-import Settings from "./pages/Settings";
+import { AppLayout } from "./AppLayout";
+import Dashboard from "./Dashboard";
+import Settings from "./Settings";
+
+// Mock NotFound
+const NotFound = () => (
+  <div className="flex items-center justify-center h-screen">
+    <h1 className="text-2xl font-bold">404 - Page Not Found</h1>
+  </div>
+);
 
 function Router() {
   return (
     <Switch>
-      <Route path={"/login"} component={Login} />
       <Route path={"/"}>
-        <ProtectedRoute>
-          <AppLayout>
-            <Dashboard />
-          </AppLayout>
-        </ProtectedRoute>
+        <AppLayout>
+          <Dashboard />
+        </AppLayout>
       </Route>
       <Route path={"/settings"}>
-        <ProtectedRoute>
-          <AppLayout>
-            <Settings />
-          </AppLayout>
-        </ProtectedRoute>
+        <AppLayout>
+          <Settings />
+        </AppLayout>
       </Route>
-      <Route path={"/404"} component={NotFound} />
-      {/* Final fallback route */}
       <Route component={NotFound} />
     </Switch>
   );
@@ -37,14 +32,10 @@ function Router() {
 
 function App() {
   return (
-    <ErrorBoundary>
-      <ThemeProvider defaultTheme="light">
-        <TooltipProvider>
-          <Toaster />
-          <Router />
-        </TooltipProvider>
-      </ThemeProvider>
-    </ErrorBoundary>
+      <TooltipProvider>
+        <Toaster />
+        <Router />
+      </TooltipProvider>
   );
 }
 

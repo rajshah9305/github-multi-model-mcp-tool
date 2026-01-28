@@ -1,14 +1,14 @@
 import { z } from "zod";
-import { protectedProcedure, router } from "../_core/trpc";
-import { getUserCredentials, upsertCredentials } from "../db";
-import { encryptValue, decryptValue } from "../encryption";
+import { protectedProcedure, router } from "./trpc-server";
+import { getUserCredentials, upsertCredentials } from "./db";
+import { encryptValue, decryptValue } from "./encryption";
 
 export const credentialsRouter = router({
   /**
    * Get current user's credentials (returns decrypted values for display)
    */
-  get: protectedProcedure.query(async ({ ctx }) => {
-    const creds = await getUserCredentials(ctx.user.id);
+  get: protectedProcedure.query(async () => {
+    const creds = await getUserCredentials(1);
     if (!creds) {
       return null;
     }
@@ -36,7 +36,7 @@ export const credentialsRouter = router({
         llmBaseUrl: z.string().optional(),
       })
     )
-    .mutation(async ({ ctx, input }) => {
+    .mutation(async ({ input }) => {
       const updateData: Record<string, string | null> = {};
 
       if (input.githubPat !== undefined) {
@@ -55,7 +55,7 @@ export const credentialsRouter = router({
         updateData.llmBaseUrl = input.llmBaseUrl;
       }
 
-      await upsertCredentials(ctx.user.id, updateData);
+      await upsertCredentials(1, updateData);
 
       return {
         success: true,
@@ -66,16 +66,16 @@ export const credentialsRouter = router({
   /**
    * Check if user has GitHub PAT configured
    */
-  hasGitHubPat: protectedProcedure.query(async ({ ctx }) => {
-    const creds = await getUserCredentials(ctx.user.id);
+  hasGitHubPat: protectedProcedure.query(async () => {
+    const creds = await getUserCredentials(1);
     return !!creds?.githubPat;
   }),
 
   /**
    * Check if user has LLM API key configured
    */
-  hasLLMKey: protectedProcedure.query(async ({ ctx }) => {
-    const creds = await getUserCredentials(ctx.user.id);
+  hasLLMKey: protectedProcedure.query(async () => {
+    const creds = await getUserCredentials(1);
     return !!creds?.llmApiKey;
   }),
 });

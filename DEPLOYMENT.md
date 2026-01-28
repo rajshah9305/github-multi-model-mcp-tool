@@ -17,13 +17,6 @@ Before deploying to Vercel, you'll need to set these environment variables:
 
 ### Authentication
 - `JWT_SECRET` - Secret key for session signing (generate a strong random string)
-- `VITE_APP_ID` - Manus OAuth application ID
-- `OWNER_OPEN_ID` - Owner's Manus OpenID
-- `OWNER_NAME` - Owner's name
-
-### Manus APIs
-- `BUILT_IN_FORGE_API_KEY` - Server-side API key for Manus services
-- `VITE_FRONTEND_FORGE_API_KEY` - Frontend API key for Manus services
 
 ### Optional
 - `VITE_APP_TITLE` - Application title (default: "GitHub MCP Frontend")
@@ -73,15 +66,7 @@ vercel --prod
 
 ## Post-Deployment Configuration
 
-### 1. Update OAuth Redirect URI
-
-After deployment, update your Manus OAuth application settings:
-
-1. Go to Manus OAuth settings
-2. Add your Vercel deployment URL to allowed redirect URIs:
-   - `https://your-app.vercel.app/api/oauth/callback`
-
-### 2. Database Connection
+### 1. Database Connection
 
 Ensure your MySQL database is:
 - Accessible from Vercel's servers
@@ -107,13 +92,6 @@ curl https://your-app.vercel.app/api/health
 |----------|---------|---------|
 | `DATABASE_URL` | MySQL connection | `mysql://user:pass@host/db` |
 | `JWT_SECRET` | Session signing | `your-secret-key-here` |
-| `VITE_APP_ID` | OAuth app ID | `your-app-id` |
-| `OAUTH_SERVER_URL` | OAuth server | `https://api.manus.im` |
-| `VITE_OAUTH_PORTAL_URL` | OAuth portal | `https://app.manus.im` |
-| `OWNER_OPEN_ID` | Owner ID | `owner-id-from-manus` |
-| `OWNER_NAME` | Owner name | `Your Name` |
-| `BUILT_IN_FORGE_API_KEY` | Server API key | `your-api-key` |
-| `VITE_FRONTEND_FORGE_API_KEY` | Frontend API key | `your-frontend-key` |
 
 ## Troubleshooting
 
@@ -124,9 +102,6 @@ curl https://your-app.vercel.app/api/health
 
 **Error**: `Database connection failed`
 - Solution: Verify DATABASE_URL is correct and database is accessible from Vercel
-
-**Error**: `OAuth redirect URI mismatch`
-- Solution: Update your Manus OAuth settings with the correct Vercel URL
 
 ### Runtime Errors
 

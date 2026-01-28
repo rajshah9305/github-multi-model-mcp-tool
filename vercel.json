@@ -20,60 +20,6 @@
       "type": "secret"
     },
     {
-      "key": "VITE_APP_ID",
-      "description": "Manus OAuth application ID",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "OAUTH_SERVER_URL",
-      "description": "Manus OAuth server URL",
-      "value": "https://api.manus.im",
-      "type": "plain"
-    },
-    {
-      "key": "VITE_OAUTH_PORTAL_URL",
-      "description": "Manus OAuth portal URL",
-      "value": "https://app.manus.im",
-      "type": "plain"
-    },
-    {
-      "key": "OWNER_OPEN_ID",
-      "description": "Owner's Manus OpenID",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "OWNER_NAME",
-      "description": "Owner's name",
-      "value": "",
-      "type": "plain"
-    },
-    {
-      "key": "BUILT_IN_FORGE_API_URL",
-      "description": "Manus built-in APIs URL",
-      "value": "https://api.manus.im",
-      "type": "plain"
-    },
-    {
-      "key": "BUILT_IN_FORGE_API_KEY",
-      "description": "Manus built-in APIs key (server-side)",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "VITE_FRONTEND_FORGE_API_KEY",
-      "description": "Manus built-in APIs key (frontend)",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "VITE_FRONTEND_FORGE_API_URL",
-      "description": "Manus built-in APIs URL (frontend)",
-      "value": "https://api.manus.im",
-      "type": "plain"
-    },
-    {
       "key": "VITE_APP_TITLE",
       "description": "Application title",
       "value": "GitHub MCP Frontend",

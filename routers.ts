@@ -1,21 +1,16 @@
-import { COOKIE_NAME } from "@shared/const";
-import { getSessionCookieOptions } from "./_core/cookies";
-import { systemRouter } from "./_core/systemRouter";
-import { publicProcedure, router } from "./_core/trpc";
-import { credentialsRouter } from "./routers/credentials";
-import { githubRouter } from "./routers/github";
-import { aiRouter } from "./routers/ai";
+import { publicProcedure, router } from "./trpc-server";
+import { credentialsRouter } from "./credentials";
+import { githubRouter } from "./routers_github";
+import { aiRouter } from "./routers_ai";
 
 export const appRouter = router({
-  system: systemRouter,
+  // Mock auth router
   auth: router({
-    me: publicProcedure.query(opts => opts.ctx.user),
-    logout: publicProcedure.mutation(({ ctx }) => {
-      const cookieOptions = getSessionCookieOptions(ctx.req);
-      ctx.res.clearCookie(COOKIE_NAME, { ...cookieOptions, maxAge: -1 });
-      return {
-        success: true,
-      } as const;
+    me: publicProcedure.query(() => {
+        return { id: 1, name: "User", email: "user@example.com" };
+    }),
+    logout: publicProcedure.mutation(() => {
+      return { success: true };
     }),
   }),
 
