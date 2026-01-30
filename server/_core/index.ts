@@ -9,5 +9,16 @@ const handler = createHTTPHandler({
 });
 
 export default function vercelHandler(req: IncomingMessage, res: ServerResponse): void {
+  // Add CORS headers for production
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    res.statusCode = 200;
+    res.end();
+    return;
+  }
+  
   handler(req, res);
 }

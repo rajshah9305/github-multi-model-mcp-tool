@@ -7,11 +7,13 @@ import { Loader2, AlertCircle, Github } from "lucide-react";
 import { RepositoryBrowser } from "@/components/RepositoryBrowser";
 import { CodeEditor } from "@/components/CodeEditor";
 import { AICodeGenerator } from "@/components/AICodeGenerator";
+import { useLocation } from "wouter";
 
 export default function Dashboard() {
   const [selectedRepo, setSelectedRepo] = useState<string | null>(null);
   const [selectedBranch, setSelectedBranch] = useState<string>("main");
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const [, navigate] = useLocation();
 
   // Check if GitHub PAT and LLM key are configured
   const hasGithubPat = trpc.credentials.hasGitHubPat.useQuery();
@@ -70,7 +72,7 @@ export default function Dashboard() {
               To use the repository browser and file operations, you need to configure your GitHub Personal Access Token.
             </p>
             <Button
-              onClick={() => window.location.href = "/settings"}
+              onClick={() => navigate("/settings")}
               className="w-full"
             >
               Go to Settings
@@ -138,7 +140,7 @@ export default function Dashboard() {
                           Configure your LLM API key in settings to use the AI assistant.
                         </p>
                         <Button
-                          onClick={() => window.location.href = "/settings"}
+                          onClick={() => navigate("/settings")}
                           className="w-full"
                         >
                           Go to Settings

@@ -11,7 +11,9 @@
     "preview": "vite preview",
     "dev:server": "tsx server/_core/dev-server.ts",
     "setup-db": "node setup-db.js",
-    "start": "pnpm setup-db && pnpm dev:full"
+    "validate": "node validate-startup.js",
+    "start": "pnpm validate && pnpm setup-db && pnpm dev:full",
+    "quick-start": "pnpm dev:full"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
@@ -21,7 +23,9 @@
     "@trpc/client": "^11.0.0-rc.600",
     "@trpc/react-query": "^11.0.0-rc.600",
     "@trpc/server": "^11.0.0-rc.600",
+    "@types/cors": "^2.8.19",
     "clsx": "^2.1.1",
+    "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "drizzle-orm": "^0.36.0",
     "lucide-react": "^0.454.0",
@@ -35,6 +39,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@types/cors": "^2.8.19",
     "@types/node": "^22.9.0",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",

@@ -10,20 +10,28 @@ const DATABASE_URL = process.env.DATABASE_URL;
 
 if (!DATABASE_URL) {
   console.error('❌ DATABASE_URL environment variable is required');
+  console.log('💡 Example: DATABASE_URL=mysql://user:password@localhost:3306/database_name');
   process.exit(1);
 }
 
 // Parse the database URL
-const url = new URL(DATABASE_URL);
-const dbName = url.pathname.slice(1); // Remove leading slash
-
-// Connection config without database name for initial setup
-const connectionConfig = {
-  host: url.hostname,
-  port: parseInt(url.port) || 3306,
-  user: url.username,
-  password: url.password,
-};
+let url, dbName, connectionConfig;
+try {
+  url = new URL(DATABASE_URL);
+  dbName = url.pathname.slice(1); // Remove leading slash
+  
+  // Connection config without database name for initial setup
+  connectionConfig = {
+    host: url.hostname,
+    port: parseInt(url.port) || 3306,
+    user: url.username,
+    password: url.password,
+  };
+} catch (error) {
+  console.error('❌ Invalid DATABASE_URL format');
+  console.log('💡 Expected format: mysql://user:password@host:port/database_name');
+  process.exit(1);
+}
 
 async function setupDatabase() {
   let connection;
@@ -106,6 +114,11 @@ async function setupDatabase() {
     
   } catch (error) {
     console.error('❌ Database setup failed:', error.message);
+    if (error.code === 'ER_ACCESS_DENIED_ERROR') {
+      console.log('💡 Check your database credentials in DATABASE_URL');
+    } else if (error.code === 'ECONNREFUSED') {
+      console.log('💡 Make sure MySQL server is running');
+    }
     process.exit(1);
   } finally {
     if (connection) {
