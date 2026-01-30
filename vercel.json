@@ -1,0 +1,112 @@
+{
+  "version": 2,
+  "name": "github-mcp-frontend",
+  "public": false,
+  "buildCommand": "pnpm build",
+  "devCommand": "pnpm dev",
+  "installCommand": "pnpm install",
+  "framework": "vite",
+  "env": [
+    {
+      "key": "DATABASE_URL",
+      "description": "MySQL database connection string",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "JWT_SECRET",
+      "description": "JWT secret for session signing",
+      "value": "",
+      "type": "secret"
+    },
+    {
+      "key": "VITE_APP_TITLE",
+      "description": "Application title",
+      "value": "GitHub MCP Frontend",
+      "type": "plain"
+    },
+    {
+      "key": "VITE_APP_LOGO",
+      "description": "Application logo URL",
+      "value": "",
+      "type": "plain"
+    },
+    {
+      "key": "NODE_ENV",
+      "description": "Node environment",
+      "value": "production",
+      "type": "plain"
+    }
+  ],
+  "builds": [
+    {
+      "src": "server/_core/index.ts",
+      "use": "@vercel/node",
+      "config": {
+        "maxDuration": 60,
+        "memory": 1024
+      }
+    },
+    {
+      "src": ".",
+      "use": "@vercel/static-build",
+      "config": {
+        "distDir": "dist"
+      }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/.*",
+      "dest": "server/_core/index.ts",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html",
+      "status": 200
+    }
+  ],
+  "headers": [
+    {
+      "source": "/api/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "no-cache, no-store, must-revalidate"
+        },
+        {
+          "key": "Access-Control-Allow-Credentials",
+          "value": "true"
+        },
+        {
+          "key": "Access-Control-Allow-Origin",
+          "value": "*"
+        },
+        {
+          "key": "Access-Control-Allow-Methods",
+          "value": "GET,OPTIONS,PATCH,DELETE,POST,PUT"
+        },
+        {
+          "key": "Access-Control-Allow-Headers",
+          "value": "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
+        }
+      ]
+    },
+    {
+      "source": "/static/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/trpc/:path*",
+      "destination": "/api/trpc/:path*"
+    }
+  ]
+}

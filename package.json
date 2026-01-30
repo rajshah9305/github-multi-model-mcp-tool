@@ -1,0 +1,48 @@
+{
+  "name": "github-mcp-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "dev:full": "concurrently -n v,s \"vite\" \"pnpm dev:server\"",
+    "build": "vite build",
+    "typecheck": "tsc --noEmit",
+    "preview": "vite preview",
+    "dev:server": "tsx server/_core/dev-server.ts",
+    "setup-db": "node setup-db.js"
+  },
+  "dependencies": {
+    "@octokit/rest": "^20.0.2",
+    "@radix-ui/react-tabs": "^1.0.4",
+    "@radix-ui/react-tooltip": "^1.0.7",
+    "@tanstack/react-query": "^5.59.0",
+    "@trpc/client": "^11.0.0-rc.600",
+    "@trpc/react-query": "^11.0.0-rc.600",
+    "@trpc/server": "^11.0.0-rc.600",
+    "clsx": "^2.1.1",
+    "drizzle-orm": "^0.36.0",
+    "lucide-react": "^0.454.0",
+    "mysql2": "^3.11.0",
+    "openai": "^4.73.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "sonner": "^1.5.0",
+    "tailwind-merge": "^2.5.4",
+    "wouter": "^3.9.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.3",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.47",
+    "tailwindcss": "^3.4.14",
+    "concurrently": "^9.0.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.6.3",
+    "vite": "^5.4.10"
+  }
+}
