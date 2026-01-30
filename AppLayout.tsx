@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "wouter";
-import { Github, Code2, Settings, Menu, X } from "lucide-react";
+import { Github, Code2, Settings, Menu, X, Sparkles, Zap } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface AppLayoutProps {
@@ -8,39 +8,50 @@ interface AppLayoutProps {
 }
 
 export function AppLayout({ children }: AppLayoutProps) {
-  const [, navigate] = useLocation();
+  const [location, navigate] = useLocation();
   const [sidebarOpen, setSidebarOpen] = useState(true);
 
   const navItems = [
-    { label: "Dashboard", path: "/", icon: Github },
-    { label: "Settings", path: "/settings", icon: Settings },
+    { label: "Dashboard", path: "/", icon: Github, description: "Manage repositories" },
+    { label: "Settings", path: "/settings", icon: Settings, description: "Configure credentials" },
   ];
 
   return (
-    <div className="flex h-screen bg-background">
+    <div className="flex h-screen bg-gradient-animated">
       {/* Sidebar */}
       <aside
         className={cn(
-          "bg-slate-900 text-white transition-all duration-300 flex flex-col",
-          sidebarOpen ? "w-64" : "w-20"
+          "sidebar text-white transition-all duration-300 flex flex-col relative",
+          sidebarOpen ? "w-72" : "w-20"
         )}
       >
+        {/* Decorative gradient line */}
+        <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-indigo-500/50 via-purple-500/30 to-transparent" />
+        
         {/* Logo */}
-        <div className="flex items-center justify-between p-4 border-b border-slate-800">
+        <div className="flex items-center justify-between p-5 border-b border-indigo-500/10">
           {sidebarOpen && (
-            <div className="flex items-center gap-2">
-              <Code2 className="w-6 h-6 text-blue-400" />
-              <span className="font-bold text-lg">GitHub MCP</span>
+            <div className="flex items-center gap-3 fade-in">
+              <div className="relative">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow">
+                  <Code2 className="w-5 h-5 text-white" />
+                </div>
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-pulse" />
+              </div>
+              <div>
+                <span className="font-bold text-lg text-gradient">GitHub MCP</span>
+                <p className="text-xs text-slate-400">AI-Powered Code Manager</p>
+              </div>
             </div>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-1 hover:bg-slate-800 rounded transition-colors"
+            className="p-2 hover:bg-indigo-500/10 rounded-lg transition-all duration-200 hover:scale-105"
           >
             {sidebarOpen ? (
-              <X className="w-5 h-5" />
+              <X className="w-5 h-5 text-slate-400" />
             ) : (
-              <Menu className="w-5 h-5" />
+              <Menu className="w-5 h-5 text-slate-400" />
             )}
           </button>
         </div>
@@ -49,14 +60,35 @@ export function AppLayout({ children }: AppLayoutProps) {
         <nav className="flex-1 p-4 space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
+            const isActive = location === item.path;
             return (
               <button
                 key={item.path}
                 onClick={() => navigate(item.path)}
-                className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-slate-800 transition-colors text-left text-sm font-medium"
+                className={cn(
+                  "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-left group",
+                  isActive 
+                    ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 text-white" 
+                    : "hover:bg-indigo-500/10 text-slate-300 hover:text-white"
+                )}
               >
-                <Icon className="w-5 h-5 flex-shrink-0" />
-                {sidebarOpen && <span>{item.label}</span>}
+                <div className={cn(
+                  "p-2 rounded-lg transition-all duration-200",
+                  isActive 
+                    ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white" 
+                    : "bg-slate-800/50 text-slate-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"
+                )}>
+                  <Icon className="w-4 h-4" />
+                </div>
+                {sidebarOpen && (
+                  <div className="slide-in-left">
+                    <span className="font-medium text-sm">{item.label}</span>
+                    <p className="text-xs text-slate-500">{item.description}</p>
+                  </div>
+                )}
+                {isActive && sidebarOpen && (
+                  <Sparkles className="w-4 h-4 text-cyan-400 ml-auto animate-pulse" />
+                )}
               </button>
             );
           })}
@@ -64,15 +96,23 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Footer */}
         {sidebarOpen && (
-          <div className="border-t border-slate-800 p-4 text-xs text-slate-500">
-            GitHub MCP
+          <div className="border-t border-indigo-500/10 p-4">
+            <div className="glass rounded-xl p-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Zap className="w-4 h-4 text-yellow-400" />
+                <span className="text-sm font-medium text-white">Pro Tip</span>
+              </div>
+              <p className="text-xs text-slate-400">
+                Use AI Assistant to generate code snippets based on your repository context.
+              </p>
+            </div>
           </div>
         )}
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 overflow-auto">
-        <div className="h-full">{children}</div>
+        <div className="h-full fade-in">{children}</div>
       </main>
     </div>
   );

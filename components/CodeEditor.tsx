@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Loader2, Copy, AlertCircle } from "lucide-react";
+import { Loader2, Copy, AlertCircle, Edit3, X, Save, FileCode, GitCommit, Check } from "lucide-react";
 import { toast } from "sonner";
 
 interface CodeEditorProps {
@@ -18,6 +18,7 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
   const [commitMessage, setCommitMessage] = useState("");
   const [isEditing, setIsEditing] = useState(false);
   const [sha, setSha] = useState("");
+  const [copied, setCopied] = useState(false);
 
   const [owner, repoName] = repo.split("/");
 
@@ -64,15 +65,23 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
 
   const handleCopy = () => {
     navigator.clipboard.writeText(content);
+    setCopied(true);
     toast.success("Copied to clipboard");
+    setTimeout(() => setCopied(false), 2000);
   };
+
+  // Get line count
+  const lineCount = content.split('\n').length;
 
   if (fileQuery.isLoading) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin text-blue-500 mx-auto mb-2" />
-          <p className="text-slate-600 text-sm">Loading file...</p>
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4 glow animate-pulse">
+            <FileCode className="w-6 h-6 text-white" />
+          </div>
+          <Loader2 className="w-6 h-6 animate-spin text-indigo-400 mx-auto mb-2" />
+          <p className="text-slate-400 text-sm">Loading file...</p>
         </div>
       </div>
     );
@@ -81,15 +90,17 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
   if (fileQuery.error) {
     return (
       <div className="p-8 flex items-center justify-center h-full">
-        <Card className="border-red-200 bg-red-50 max-w-md">
+        <Card className="glass border-red-500/30 max-w-md card-hover">
           <CardHeader>
-            <CardTitle className="flex items-center gap-2 text-red-900">
-              <AlertCircle className="w-5 h-5" />
+            <CardTitle className="flex items-center gap-3 text-red-400">
+              <div className="p-2 rounded-lg bg-red-500/20">
+                <AlertCircle className="w-5 h-5" />
+              </div>
               Error Loading File
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-red-800 text-sm">
+            <p className="text-slate-300 text-sm">
               {fileQuery.error instanceof Error ? fileQuery.error.message : "Failed to load file"}
             </p>
           </CardContent>
@@ -99,27 +110,43 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
   }
 
   return (
-    <div className="h-full flex flex-col p-6 gap-4 overflow-y-auto bg-background">
-      <div className="flex items-center justify-between">
-        <div>
-          <h2 className="text-xl font-bold">{filePath}</h2>
-          <p className="text-sm text-slate-600">Branch: {branch}</p>
+    <div className="h-full flex flex-col p-6 gap-4 overflow-y-auto fade-in">
+      {/* Header */}
+      <div className="flex items-center justify-between glass rounded-xl p-4">
+        <div className="flex items-center gap-4">
+          <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
+            <FileCode className="w-5 h-5 text-indigo-400" />
+          </div>
+          <div>
+            <h2 className="text-lg font-semibold text-white">{filePath.split('/').pop()}</h2>
+            <p className="text-xs text-slate-500 font-mono">{filePath}</p>
+          </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex items-center gap-2">
+          <div className="px-3 py-1 glass rounded-lg text-xs text-slate-400">
+            {lineCount} lines
+          </div>
           <Button
             variant="outline"
             size="sm"
             onClick={handleCopy}
             disabled={!content}
+            className="btn-secondary rounded-lg"
           >
-            <Copy className="w-4 h-4 mr-2" />
-            Copy
+            {copied ? (
+              <Check className="w-4 h-4 mr-2 text-green-400" />
+            ) : (
+              <Copy className="w-4 h-4 mr-2" />
+            )}
+            {copied ? "Copied!" : "Copy"}
           </Button>
           {!isEditing ? (
             <Button
               size="sm"
               onClick={() => setIsEditing(true)}
+              className="btn-primary rounded-lg"
             >
+              <Edit3 className="w-4 h-4 mr-2" />
               Edit
             </Button>
           ) : (
@@ -131,7 +158,9 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
                 setContent(fileQuery.data?.content || "");
                 setCommitMessage("");
               }}
+              className="btn-secondary rounded-lg"
             >
+              <X className="w-4 h-4 mr-2" />
               Cancel
             </Button>
           )}
@@ -141,38 +170,55 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
       {isEditing ? (
         <div className="flex-1 flex flex-col gap-4 min-h-0">
           <div className="flex-1 flex flex-col gap-2 min-h-0">
-            <label className="text-sm font-medium">File Content</label>
+            <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+              <FileCode className="w-4 h-4 text-indigo-400" />
+              File Content
+            </label>
             <Textarea
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              className="flex-1 font-mono text-sm resize-none"
+              className="flex-1 font-mono text-sm resize-none input-modern rounded-xl"
               placeholder="File content..."
             />
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium">Commit Message</label>
+            <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+              <GitCommit className="w-4 h-4 text-cyan-400" />
+              Commit Message
+            </label>
             <Input
               value={commitMessage}
               onChange={(e) => setCommitMessage(e.target.value)}
               placeholder="Describe your changes..."
-              className="text-sm"
+              className="text-sm input-modern rounded-xl"
             />
           </div>
 
           <Button
             onClick={handleSave}
             disabled={updateMutation.isPending || !commitMessage.trim()}
-            className="w-full"
+            className="w-full btn-primary rounded-xl py-3"
           >
-            {updateMutation.isPending && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
+            {updateMutation.isPending ? (
+              <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4 mr-2" />
+            )}
             Save Changes
           </Button>
         </div>
       ) : (
-        <div className="flex-1 bg-slate-900 rounded-lg p-4 overflow-auto">
-          <pre className="text-slate-100 font-mono text-sm whitespace-pre-wrap break-words">
-            {content || "No content"}
+        <div className="flex-1 code-block p-4 overflow-auto relative">
+          {/* Line numbers */}
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-slate-900/50 to-transparent pointer-events-none" />
+          <pre className="text-slate-100 font-mono text-sm whitespace-pre-wrap break-words pl-2">
+            {content.split('\n').map((line, i) => (
+              <div key={i} className="flex">
+                <span className="w-10 text-right pr-4 text-slate-600 select-none text-xs">{i + 1}</span>
+                <span className="flex-1">{line || ' '}</span>
+              </div>
+            ))}
           </pre>
         </div>
       )}

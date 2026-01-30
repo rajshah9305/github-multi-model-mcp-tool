@@ -2,7 +2,7 @@ import { useState } from "react";
 import { trpc } from "@/lib/trpc";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Loader2, Folder, File, RefreshCw, ArrowLeft } from "lucide-react";
+import { Loader2, Folder, File, RefreshCw, ArrowLeft, Search, GitBranch, FolderOpen, FileCode, FileJson, FileText } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface RepositoryBrowserProps {
@@ -12,6 +12,30 @@ interface RepositoryBrowserProps {
   onRepoSelect: (repo: string | null) => void;
   onBranchSelect: (branch: string) => void;
   onFileSelect: (file: string | null) => void;
+}
+
+// Get file icon based on extension
+function getFileIcon(filename: string) {
+  const ext = filename.split('.').pop()?.toLowerCase();
+  switch (ext) {
+    case 'ts':
+    case 'tsx':
+    case 'js':
+    case 'jsx':
+      return <FileCode className="w-4 h-4 text-yellow-400 flex-shrink-0" />;
+    case 'json':
+      return <FileJson className="w-4 h-4 text-green-400 flex-shrink-0" />;
+    case 'md':
+    case 'txt':
+      return <FileText className="w-4 h-4 text-slate-400 flex-shrink-0" />;
+    case 'css':
+    case 'scss':
+      return <FileCode className="w-4 h-4 text-pink-400 flex-shrink-0" />;
+    case 'html':
+      return <FileCode className="w-4 h-4 text-orange-400 flex-shrink-0" />;
+    default:
+      return <File className="w-4 h-4 text-slate-500 flex-shrink-0" />;
+  }
 }
 
 export function RepositoryBrowser({
@@ -78,134 +102,175 @@ export function RepositoryBrowser({
   return (
     <div className="flex flex-col h-full">
       {/* Header */}
-      <div className="p-4 border-b space-y-2">
+      <div className="p-4 border-b border-indigo-500/10 space-y-3">
         {!selectedRepo ? (
             <>
-                <Input
-                placeholder="Search repositories..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="text-sm"
-                />
+                <div className="relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-500" />
+                  <Input
+                    placeholder="Search repositories..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 input-modern text-sm rounded-xl"
+                  />
+                </div>
                 <Button
-                variant="outline"
-                size="sm"
-                onClick={() => reposQuery.refetch()}
-                disabled={reposQuery.isLoading}
-                className="w-full"
+                  variant="outline"
+                  size="sm"
+                  onClick={() => reposQuery.refetch()}
+                  disabled={reposQuery.isLoading}
+                  className="w-full btn-secondary rounded-xl"
                 >
-                {reposQuery.isLoading ? (
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                    <RefreshCw className="w-4 h-4 mr-2" />
-                )}
-                Refresh
+                  {reposQuery.isLoading ? (
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                      <RefreshCw className="w-4 h-4 mr-2" />
+                  )}
+                  Refresh Repositories
                 </Button>
             </>
         ) : (
-            <div className="space-y-2">
-                 <Button variant="ghost" size="sm" onClick={handleBackToRepos} className="w-full justify-start -ml-2">
+            <div className="space-y-3">
+                 <Button 
+                   variant="ghost" 
+                   size="sm" 
+                   onClick={handleBackToRepos} 
+                   className="w-full justify-start text-slate-400 hover:text-white hover:bg-indigo-500/10 rounded-xl"
+                 >
                     <ArrowLeft className="w-4 h-4 mr-2" />
                     Back to Repositories
                  </Button>
-                 <div className="font-semibold text-sm truncate px-1">{selectedRepo}</div>
+                 <div className="glass rounded-xl p-3">
+                   <p className="text-xs text-slate-500 mb-1">SELECTED REPOSITORY</p>
+                   <p className="font-semibold text-sm text-white truncate">{selectedRepo}</p>
+                 </div>
             </div>
         )}
       </div>
 
       {!selectedRepo ? (
           // Repositories List
-          <div className="flex-1 overflow-y-auto">
+          <div className="flex-1 overflow-y-auto p-2">
             {reposQuery.isLoading ? (
-            <div className="p-4 flex items-center justify-center">
-                <Loader2 className="w-5 h-5 animate-spin text-blue-500" />
-            </div>
+              <div className="p-8 flex flex-col items-center justify-center">
+                  <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mb-3" />
+                  <p className="text-sm text-slate-500">Loading repositories...</p>
+              </div>
             ) : filteredRepos.length === 0 ? (
-            <div className="p-4 text-sm text-slate-500 text-center">
-                {searchTerm ? "No repositories found" : "No repositories"}
-            </div>
+              <div className="p-8 text-center">
+                  <FolderOpen className="w-12 h-12 text-slate-600 mx-auto mb-3" />
+                  <p className="text-sm text-slate-500">
+                    {searchTerm ? "No repositories found" : "No repositories available"}
+                  </p>
+              </div>
             ) : (
-            <div className="space-y-1 p-2">
-                {filteredRepos.map((r) => (
-                <button
-                    key={r.id}
-                    onClick={() => handleRepoSelect(r.fullName)}
-                    className="w-full text-left px-3 py-2 rounded text-sm font-medium hover:bg-slate-200 text-slate-900 transition-colors"
-                >
-                    <div className="flex items-center gap-2">
-                    <Folder className="w-4 h-4 flex-shrink-0" />
-                    <span className="truncate">{r.name}</span>
-                    </div>
-                    {r.description && (
-                    <p className="text-xs text-slate-500 ml-6 truncate">{r.description}</p>
-                    )}
-                </button>
-                ))}
-            </div>
+              <div className="space-y-1">
+                  {filteredRepos.map((r, index) => (
+                    <button
+                        key={r.id}
+                        onClick={() => handleRepoSelect(r.fullName)}
+                        className="w-full text-left px-3 py-3 rounded-xl text-sm font-medium hover:bg-indigo-500/10 text-slate-300 hover:text-white transition-all duration-200 group fade-in"
+                        style={{ animationDelay: `${index * 30}ms` }}
+                    >
+                        <div className="flex items-center gap-3">
+                          <div className="p-2 rounded-lg bg-indigo-500/10 group-hover:bg-indigo-500/20 transition-colors">
+                            <Folder className="w-4 h-4 text-indigo-400" />
+                          </div>
+                          <div className="flex-1 min-w-0">
+                            <span className="truncate block">{r.name}</span>
+                            {r.description && (
+                              <p className="text-xs text-slate-500 truncate mt-0.5">{r.description}</p>
+                            )}
+                          </div>
+                        </div>
+                    </button>
+                  ))}
+              </div>
             )}
         </div>
       ) : (
           <div className="flex-1 flex flex-col min-h-0">
                {/* Branch Selector */}
-                <div className="p-4 border-b space-y-1">
-                    <p className="text-xs font-semibold text-slate-600">BRANCH</p>
+                <div className="p-4 border-b border-indigo-500/10">
+                    <p className="text-xs font-semibold text-slate-500 mb-2 flex items-center gap-2">
+                      <GitBranch className="w-3 h-3" />
+                      BRANCH
+                    </p>
                     {branchesQuery.isLoading ? (
-                        <div className="flex items-center justify-center py-2">
-                        <Loader2 className="w-4 h-4 animate-spin text-blue-500" />
+                        <div className="flex items-center justify-center py-3">
+                          <Loader2 className="w-4 h-4 animate-spin text-indigo-400" />
                         </div>
                     ) : branchesQuery.data ? (
                         <select
-                        value={selectedBranch}
-                        onChange={(e) => {
-                            onBranchSelect(e.target.value);
-                            setCurrentPath("");
-                            onFileSelect(null);
-                        }}
-                        className="w-full px-3 py-2 border rounded text-sm bg-white"
+                          value={selectedBranch}
+                          onChange={(e) => {
+                              onBranchSelect(e.target.value);
+                              setCurrentPath("");
+                              onFileSelect(null);
+                          }}
+                          className="w-full px-3 py-2 rounded-xl text-sm input-modern cursor-pointer"
                         >
-                        {branchesQuery.data.map((branch) => (
-                            <option key={branch.name} value={branch.name}>
-                            {branch.name}
-                            </option>
-                        ))}
+                          {branchesQuery.data.map((branch) => (
+                              <option key={branch.name} value={branch.name}>
+                                {branch.name}
+                              </option>
+                          ))}
                         </select>
                     ) : null}
                 </div>
 
                {/* File Browser */}
                <div className="flex-1 overflow-y-auto p-2">
-                    <div className="flex items-center gap-2 mb-2 px-2 text-sm text-slate-500 font-mono">
+                    {/* Breadcrumb */}
+                    <div className="flex items-center gap-1 mb-3 px-2 text-xs text-slate-500 font-mono">
                         {currentPath ? (
-                            <div className="flex items-center gap-1 hover:text-blue-500 cursor-pointer" onClick={handleGoUp}>
+                            <button 
+                              className="flex items-center gap-1 hover:text-indigo-400 transition-colors p-1 rounded hover:bg-indigo-500/10" 
+                              onClick={handleGoUp}
+                            >
                                 <ArrowLeft className="w-3 h-3" />
                                 <span>..</span>
-                            </div>
+                            </button>
                         ) : null}
-                        <span className="text-slate-300">/</span>
-                        <span className="truncate">{currentPath}</span>
+                        <span className="text-indigo-500/50">/</span>
+                        <span className="truncate text-slate-400">{currentPath || "root"}</span>
                     </div>
 
                     {filesQuery.isLoading ? (
-                        <div className="flex justify-center p-4"><Loader2 className="animate-spin w-4 h-4 text-blue-500" /></div>
+                        <div className="flex flex-col items-center justify-center p-8">
+                          <Loader2 className="animate-spin w-6 h-6 text-indigo-400 mb-2" />
+                          <p className="text-xs text-slate-500">Loading files...</p>
+                        </div>
                     ) : filesQuery.error ? (
-                        <div className="text-red-500 p-2 text-xs">Error loading files</div>
+                        <div className="text-red-400 p-4 text-xs text-center glass rounded-xl border border-red-500/20">
+                          Error loading files
+                        </div>
                     ) : !filesQuery.data?.length ? (
-                        <div className="text-slate-500 p-2 text-xs text-center">Empty directory</div>
+                        <div className="text-slate-500 p-8 text-sm text-center">
+                          <FolderOpen className="w-10 h-10 text-slate-600 mx-auto mb-2" />
+                          Empty directory
+                        </div>
                     ) : (
-                        <div className="space-y-1">
+                        <div className="space-y-0.5">
                             {filesQuery.data?.sort((a, b) => {
                                 if (a.type === b.type) return a.name.localeCompare(b.name);
                                 return a.type === 'dir' ? -1 : 1;
-                            }).map(item => (
+                            }).map((item, index) => (
                                 <button
                                     key={item.path}
                                     onClick={() => handleFileClick(item)}
                                     className={cn(
-                                        "w-full text-left px-2 py-1.5 rounded text-sm flex items-center gap-2 hover:bg-slate-100 transition-colors",
-                                        selectedFile === item.path && item.type === "file" ? "bg-blue-100 text-blue-900" : "text-slate-700"
+                                        "w-full text-left px-3 py-2 rounded-lg text-sm flex items-center gap-3 transition-all duration-200 fade-in",
+                                        selectedFile === item.path && item.type === "file" 
+                                          ? "bg-indigo-500/20 text-white border-l-2 border-indigo-400" 
+                                          : "text-slate-400 hover:bg-indigo-500/10 hover:text-white"
                                     )}
+                                    style={{ animationDelay: `${index * 20}ms` }}
                                 >
-                                    {item.type === "dir" ? <Folder className="w-4 h-4 text-blue-400 flex-shrink-0" /> : <File className="w-4 h-4 text-slate-400 flex-shrink-0" />}
+                                    {item.type === "dir" 
+                                      ? <Folder className="w-4 h-4 text-indigo-400 flex-shrink-0" /> 
+                                      : getFileIcon(item.name)
+                                    }
                                     <span className="truncate">{item.name}</span>
                                 </button>
                             ))}

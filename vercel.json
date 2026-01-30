@@ -6,49 +6,19 @@
   "devCommand": "pnpm dev",
   "installCommand": "pnpm install",
   "framework": "vite",
-  "env": [
-    {
-      "key": "DATABASE_URL",
-      "description": "MySQL database connection string",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "JWT_SECRET",
-      "description": "JWT secret for session signing",
-      "value": "",
-      "type": "secret"
-    },
-    {
-      "key": "VITE_APP_TITLE",
-      "description": "Application title",
-      "value": "GitHub MCP Frontend",
-      "type": "plain"
-    },
-    {
-      "key": "VITE_APP_LOGO",
-      "description": "Application logo URL",
-      "value": "",
-      "type": "plain"
-    },
-    {
-      "key": "NODE_ENV",
-      "description": "Node environment",
-      "value": "production",
-      "type": "plain"
+  "functions": {
+    "server/_core/index.ts": {
+      "maxDuration": 60,
+      "memory": 1024
     }
-  ],
+  },
   "builds": [
     {
       "src": "server/_core/index.ts",
-      "use": "@vercel/node",
-      "config": {
-        "maxDuration": 60,
-        "memory": 1024
-      }
+      "use": "@vercel/node"
     },
     {
-      "src": ".",
+      "src": "package.json",
       "use": "@vercel/static-build",
       "config": {
         "distDir": "dist"
@@ -57,14 +27,21 @@
   ],
   "routes": [
     {
-      "src": "/api/.*",
+      "src": "/api/trpc/(.*)",
       "dest": "server/_core/index.ts",
       "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
     },
     {
+      "src": "/api/(.*)",
+      "dest": "server/_core/index.ts",
+      "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
       "src": "/(.*)",
-      "dest": "/index.html",
-      "status": 200
+      "dest": "/index.html"
     }
   ],
   "headers": [
@@ -94,19 +71,13 @@
       ]
     },
     {
-      "source": "/static/(.*)",
+      "source": "/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
           "value": "public, max-age=31536000, immutable"
         }
       ]
-    }
-  ],
-  "rewrites": [
-    {
-      "source": "/api/trpc/:path*",
-      "destination": "/api/trpc/:path*"
     }
   ]
 }
