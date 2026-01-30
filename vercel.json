@@ -1,21 +1,12 @@
 {
   "version": 2,
-  "name": "github-mcp-frontend",
-  "public": false,
-  "buildCommand": "pnpm build",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
-  "framework": "vite",
-  "functions": {
-    "server/_core/index.ts": {
-      "maxDuration": 60,
-      "memory": 1024
-    }
-  },
   "builds": [
     {
       "src": "server/_core/index.ts",
-      "use": "@vercel/node"
+      "use": "@vercel/node",
+      "config": {
+        "maxLambdaSize": "50mb"
+      }
     },
     {
       "src": "package.json",
