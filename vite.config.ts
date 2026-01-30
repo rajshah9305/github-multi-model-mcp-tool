@@ -17,4 +17,19 @@ export default defineConfig({
       },
     },
   },
+  build: {
+    target: "ES2020",
+    minify: "terser",
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          "vendor-react": ["react", "react-dom"],
+          "vendor-ui": ["@radix-ui/react-tabs", "@radix-ui/react-tooltip", "lucide-react", "sonner"],
+          "vendor-trpc": ["@trpc/client", "@trpc/react-query"],
+          "vendor-data": ["@tanstack/react-query", "drizzle-orm"],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 600,
+  },
 });
