@@ -13,21 +13,34 @@ export const aiRouter = router({
       })
     )
     .mutation(async ({ input }) => {
-      const creds = await getUserCredentials(1);
-      if (!creds?.llmApiKey) {
-        throw new Error("LLM API key not configured");
+      try {
+        const creds = await getUserCredentials(1);
+        if (!creds?.llmApiKey) {
+          throw new Error("LLM API key not configured. Please add your API key in Settings.");
+        }
+        const client = createLLMClient(creds.llmApiKey, creds.llmBaseUrl || undefined);
+        const model = input.model || creds.llmModel || "gpt-4o";
+        const code = await generateCode(client, input.prompt, input.context, model);
+        return { code };
+      } catch (error) {
+        console.error("Error generating code:", error);
+        throw error;
       }
-      const client = createLLMClient(creds.llmApiKey, creds.llmBaseUrl || undefined);
-      const model = input.model || creds.llmModel || "gpt-4o";
-      const code = await generateCode(client, input.prompt, input.context, model);
-      return { code };
     }),
 
   getConfig: publicProcedure.query(async () => {
-    const creds = await getUserCredentials(1);
-    return {
-      model: creds?.llmModel,
-      baseUrl: creds?.llmBaseUrl,
-    };
+    try {
+      const creds = await getUserCredentials(1);
+      return {
+        model: creds?.llmModel,
+        baseUrl: creds?.llmBaseUrl,
+      };
+    } catch (error) {
+      console.error("Error getting AI config:", error);
+      return {
+        model: null,
+        baseUrl: null,
+      };
+    }
   }),
 });

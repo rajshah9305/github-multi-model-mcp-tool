@@ -10,7 +10,8 @@
     "typecheck": "tsc --noEmit",
     "preview": "vite preview",
     "dev:server": "tsx server/_core/dev-server.ts",
-    "setup-db": "node setup-db.js"
+    "setup-db": "node setup-db.js",
+    "start": "pnpm setup-db && pnpm dev:full"
   },
   "dependencies": {
     "@octokit/rest": "^20.0.2",
@@ -21,6 +22,7 @@
     "@trpc/react-query": "^11.0.0-rc.600",
     "@trpc/server": "^11.0.0-rc.600",
     "clsx": "^2.1.1",
+    "dotenv": "^16.6.1",
     "drizzle-orm": "^0.36.0",
     "lucide-react": "^0.454.0",
     "mysql2": "^3.11.0",

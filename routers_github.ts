@@ -5,43 +5,63 @@ import { createGitHubClient, listRepositories, listBranches, getFileContent, lis
 
 export const githubRouter = router({
   listRepositories: publicProcedure.query(async () => {
-    const creds = await getUserCredentials(1);
-    if (!creds?.githubPat) {
-      throw new Error("GitHub PAT not configured");
+    try {
+      const creds = await getUserCredentials(1);
+      if (!creds?.githubPat) {
+        throw new Error("GitHub PAT not configured. Please add your GitHub Personal Access Token in Settings.");
+      }
+      const octokit = createGitHubClient(creds.githubPat);
+      const data = await listRepositories(octokit);
+      return data.map((repo: { id: number; name: string; full_name?: string; fullName?: string; description?: string | null }) => ({
+        ...repo,
+        fullName: repo.full_name ?? repo.fullName ?? "",
+      }));
+    } catch (error) {
+      console.error("Error listing repositories:", error);
+      throw error;
     }
-    const octokit = createGitHubClient(creds.githubPat);
-    const data = await listRepositories(octokit);
-    return data.map((repo: { id: number; name: string; full_name?: string; fullName?: string; description?: string | null }) => ({
-      ...repo,
-      fullName: repo.full_name ?? repo.fullName ?? "",
-    }));
   }),
 
   listBranches: publicProcedure
     .input(z.object({ owner: z.string(), repo: z.string() }))
     .query(async ({ input }) => {
-      const creds = await getUserCredentials(1);
-      if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
-      const octokit = createGitHubClient(creds.githubPat);
-      return listBranches(octokit, input.owner, input.repo);
+      try {
+        const creds = await getUserCredentials(1);
+        if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
+        const octokit = createGitHubClient(creds.githubPat);
+        return await listBranches(octokit, input.owner, input.repo);
+      } catch (error) {
+        console.error("Error listing branches:", error);
+        throw error;
+      }
     }),
 
   getFileContent: publicProcedure
     .input(z.object({ owner: z.string(), repo: z.string(), path: z.string(), branch: z.string() }))
     .query(async ({ input }) => {
-      const creds = await getUserCredentials(1);
-      if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
-      const octokit = createGitHubClient(creds.githubPat);
-      return getFileContent(octokit, input.owner, input.repo, input.path, input.branch);
+      try {
+        const creds = await getUserCredentials(1);
+        if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
+        const octokit = createGitHubClient(creds.githubPat);
+        return await getFileContent(octokit, input.owner, input.repo, input.path, input.branch);
+      } catch (error) {
+        console.error("Error getting file content:", error);
+        throw error;
+      }
     }),
 
   listDirectoryContents: publicProcedure
     .input(z.object({ owner: z.string(), repo: z.string(), path: z.string().optional(), branch: z.string().optional() }))
     .query(async ({ input }) => {
-      const creds = await getUserCredentials(1);
-      if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
-      const octokit = createGitHubClient(creds.githubPat);
-      return listDirectoryContents(octokit, input.owner, input.repo, input.path || "", input.branch);
+      try {
+        const creds = await getUserCredentials(1);
+        if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
+        const octokit = createGitHubClient(creds.githubPat);
+        return await listDirectoryContents(octokit, input.owner, input.repo, input.path || "", input.branch);
+      } catch (error) {
+        console.error("Error listing directory contents:", error);
+        throw error;
+      }
     }),
 
   updateFile: publicProcedure
@@ -55,9 +75,14 @@ export const githubRouter = router({
         branch: z.string()
     }))
     .mutation(async ({ input }) => {
-        const creds = await getUserCredentials(1);
-        if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
-        const octokit = createGitHubClient(creds.githubPat);
-        return updateFile(octokit, input.owner, input.repo, input.path, input.content, input.message, input.sha, input.branch);
+        try {
+          const creds = await getUserCredentials(1);
+          if (!creds?.githubPat) throw new Error("GitHub PAT not configured");
+          const octokit = createGitHubClient(creds.githubPat);
+          return await updateFile(octokit, input.owner, input.repo, input.path, input.content, input.message, input.sha, input.branch);
+        } catch (error) {
+          console.error("Error updating file:", error);
+          throw error;
+        }
     })
 });
