@@ -1,41 +1,53 @@
-import { drizzle } from "drizzle-orm/mysql2";
-import mysql from "mysql2/promise";
+import { drizzle } from "drizzle-orm/sql-js";
+import initSqlJs from "sql.js";
 import * as schema from "./schema";
 import { eq } from "drizzle-orm";
 import { credentials } from "./schema";
+import fs from "fs";
 
-const connectionString = process.env.DATABASE_URL || "";
+const dbPath = process.env.DATABASE_URL || "sqlite.db";
 
 let dbInstance: any = null;
-let connectionPool: any = null;
+let sqlJsDb: any = null;
 
 export async function getDb() {
   if (dbInstance) return dbInstance;
-  if (!connectionString) {
-    console.warn("DATABASE_URL not configured. Database operations will fail.");
-    return null;
-  }
 
   try {
-    // Create connection pool for better performance
-    if (!connectionPool) {
-      connectionPool = mysql.createPool({
-        uri: connectionString,
-        waitForConnections: true,
-        connectionLimit: 10,
-        queueLimit: 0,
-      });
+    const SQL = await initSqlJs();
+
+    let buffer;
+    try {
+      if (fs.existsSync(dbPath)) {
+        buffer = fs.readFileSync(dbPath);
+      }
+    } catch (e) {
+      console.warn("Failed to read database file, creating new one.", e);
     }
     
-    dbInstance = drizzle(connectionPool, { schema, mode: "default" });
+    if (buffer) {
+      sqlJsDb = new SQL.Database(buffer);
+    } else {
+      sqlJsDb = new SQL.Database();
+      saveDb(); // Initialize file
+    }
     
-    // Test the connection
-    await connectionPool.execute('SELECT 1');
+    dbInstance = drizzle(sqlJsDb, { schema });
     
     return dbInstance;
   } catch (e) {
     console.error("Failed to connect to database:", e);
     return null;
+  }
+}
+
+export function saveDb() {
+  if (!sqlJsDb) return;
+  try {
+    const data = sqlJsDb.export();
+    fs.writeFileSync(dbPath, Buffer.from(data));
+  } catch (e) {
+    console.error("Failed to save database:", e);
   }
 }
 
@@ -63,9 +75,9 @@ export async function upsertCredentials(userId: number, data: any) {
     } else {
       await db.insert(credentials).values({userId, ...data});
     }
+    saveDb();
   } catch (error) {
     console.error("Error upserting credentials:", error);
     throw new Error("Failed to save credentials");
   }
 }
-
