@@ -43,4 +43,26 @@ export const aiRouter = router({
       };
     }
   }),
+
+  testConnection: publicProcedure.mutation(async () => {
+    try {
+      const creds = await getUserCredentials(1);
+      if (!creds?.llmApiKey) {
+        throw new Error("LLM API key not configured. Please add your API key in Settings.");
+      }
+      const client = createLLMClient(creds.llmApiKey, creds.llmBaseUrl || undefined);
+      const model = creds.llmModel || "gpt-4o";
+
+      await client.chat.completions.create({
+        model,
+        messages: [{ role: "user", content: "Test" }],
+        max_tokens: 1,
+      });
+
+      return { success: true, message: "Connection successful" };
+    } catch (error) {
+      console.error("Error testing connection:", error);
+      throw error;
+    }
+  }),
 });

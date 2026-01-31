@@ -5,7 +5,7 @@ import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { Loader2, Github, Sparkles, Key, Link, Cpu, CheckCircle2, XCircle, Shield, ExternalLink, Save } from "lucide-react";
+import { Loader2, Github, Sparkles, Key, Link, Cpu, CheckCircle2, XCircle, Shield, ExternalLink, Save, Zap, Play } from "lucide-react";
 
 export default function SettingsPage() {
   const [githubPat, setGithubPat] = useState("");
@@ -15,6 +15,7 @@ export default function SettingsPage() {
 
   const credentialsQuery = trpc.credentials.get.useQuery();
   const saveMutation = trpc.credentials.save.useMutation();
+  const testConnectionMutation = trpc.ai.testConnection.useMutation();
 
   useEffect(() => {
     if (credentialsQuery.data) {
@@ -38,6 +39,37 @@ export default function SettingsPage() {
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "Failed to save credentials");
     }
+  };
+
+  const handleTestConnection = async () => {
+    try {
+      const result = await testConnectionMutation.mutateAsync();
+      toast.success(result.message);
+    } catch (error) {
+      toast.error(error instanceof Error ? error.message : "Connection failed");
+    }
+  };
+
+  const applyQuickSetup = (provider: string) => {
+    switch (provider) {
+      case "openai":
+        setLlmBaseUrl("https://api.openai.com/v1");
+        setLlmModel("gpt-4o");
+        break;
+      case "deepseek":
+        setLlmBaseUrl("https://api.deepseek.com");
+        setLlmModel("deepseek-chat");
+        break;
+      case "groq":
+        setLlmBaseUrl("https://api.groq.com/openai/v1");
+        setLlmModel("llama3-70b-8192");
+        break;
+      case "ollama":
+        setLlmBaseUrl("http://localhost:11434/v1");
+        setLlmModel("llama3");
+        break;
+    }
+    toast.info(`Applied ${provider} defaults`);
   };
 
   return (
@@ -156,7 +188,7 @@ export default function SettingsPage() {
         </TabsContent>
 
         <TabsContent value="llm" className="space-y-6 slide-in-right">
-          <Card className="glass border-purple-500/20 card-hover">
+          <Card className="glass border-purple-500/20 card-hover glow-purple">
             <CardHeader>
               <CardTitle className="flex items-center gap-3 text-white">
                 <div className="p-2 rounded-lg bg-gradient-to-br from-purple-500 to-pink-500">
@@ -169,6 +201,30 @@ export default function SettingsPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Quick Setup */}
+              <div className="glass rounded-xl p-4 border border-purple-500/20">
+                <p className="text-sm text-slate-300 font-medium mb-3 flex items-center gap-2">
+                  <Zap className="w-4 h-4 text-yellow-400" />
+                  Quick Setup
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    { id: "openai", name: "OpenAI" },
+                    { id: "deepseek", name: "DeepSeek" },
+                    { id: "groq", name: "Groq" },
+                    { id: "ollama", name: "Ollama (Local)" },
+                  ].map((provider) => (
+                    <button
+                      key={provider.id}
+                      onClick={() => applyQuickSetup(provider.id)}
+                      className="px-3 py-1.5 rounded-lg bg-indigo-500/10 hover:bg-indigo-500/20 text-xs text-indigo-300 border border-indigo-500/20 transition-all hover:scale-105"
+                    >
+                      {provider.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
                   <Key className="w-4 h-4 text-purple-400" />
@@ -196,44 +252,49 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
-                  <Cpu className="w-4 h-4 text-cyan-400" />
-                  Model Name
-                </label>
-                <Input
-                  placeholder="gpt-4o"
-                  value={llmModel}
-                  onChange={(e) => setLlmModel(e.target.value)}
-                  className="input-modern rounded-xl"
-                  list="model-suggestions"
-                />
-                <datalist id="model-suggestions">
-                  <option value="gpt-4o" />
-                  <option value="gpt-4-turbo" />
-                  <option value="gpt-3.5-turbo" />
-                  <option value="claude-3-opus" />
-                  <option value="claude-3-sonnet" />
-                </datalist>
-                <p className="text-xs text-slate-500 mt-2">
-                  Current: <span className="text-cyan-400">{credentialsQuery.data?.llmModel || "gpt-4o (default)"}</span>
-                </p>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
+                    <Cpu className="w-4 h-4 text-cyan-400" />
+                    Model Name
+                  </label>
+                  <Input
+                    placeholder="gpt-4o"
+                    value={llmModel}
+                    onChange={(e) => setLlmModel(e.target.value)}
+                    className="input-modern rounded-xl"
+                    list="model-suggestions"
+                  />
+                  <datalist id="model-suggestions">
+                    <option value="gpt-4o" />
+                    <option value="gpt-4-turbo" />
+                    <option value="gpt-3.5-turbo" />
+                    <option value="deepseek-chat" />
+                    <option value="deepseek-coder" />
+                    <option value="llama3-70b-8192" />
+                    <option value="llama3" />
+                    <option value="claude-3-opus" />
+                    <option value="claude-3-sonnet" />
+                  </datalist>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
+                    <Link className="w-4 h-4 text-pink-400" />
+                    Base URL
+                  </label>
+                  <Input
+                    placeholder="https://api.openai.com/v1"
+                    value={llmBaseUrl}
+                    onChange={(e) => setLlmBaseUrl(e.target.value)}
+                    className="input-modern rounded-xl"
+                  />
+                </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium text-slate-300 mb-2 flex items-center gap-2">
-                  <Link className="w-4 h-4 text-pink-400" />
-                  Base URL
-                </label>
-                <Input
-                  placeholder="https://api.openai.com/v1"
-                  value={llmBaseUrl}
-                  onChange={(e) => setLlmBaseUrl(e.target.value)}
-                  className="input-modern rounded-xl"
-                />
-                <p className="text-xs text-slate-500 mt-2">
-                  Current: <span className="text-pink-400">{credentialsQuery.data?.llmBaseUrl || "https://api.openai.com/v1 (default)"}</span>
-                </p>
+              <div className="flex gap-4 text-xs text-slate-500">
+                <span>Current Model: <span className="text-cyan-400">{credentialsQuery.data?.llmModel || "gpt-4o (default)"}</span></span>
+                <span>Current URL: <span className="text-pink-400">{credentialsQuery.data?.llmBaseUrl || "https://api.openai.com/v1 (default)"}</span></span>
               </div>
 
               <div className="glass rounded-xl p-4 border border-purple-500/20">
@@ -252,7 +313,7 @@ export default function SettingsPage() {
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-400">
                     <div className="w-2 h-2 rounded-full bg-cyan-400" />
-                    <span>OpenAI: gpt-3.5-turbo</span>
+                    <span>DeepSeek & Groq</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-slate-400">
                     <div className="w-2 h-2 rounded-full bg-pink-400" />
@@ -261,18 +322,34 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <Button
-                onClick={handleSaveCredentials}
-                disabled={saveMutation.isPending}
-                className="w-full btn-primary rounded-xl py-3"
-              >
-                {saveMutation.isPending ? (
-                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                ) : (
-                  <Save className="w-4 h-4 mr-2" />
-                )}
-                Save Credentials
-              </Button>
+              <div className="flex gap-3">
+                <Button
+                  onClick={handleSaveCredentials}
+                  disabled={saveMutation.isPending}
+                  className="flex-1 btn-primary rounded-xl py-3"
+                >
+                  {saveMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Save className="w-4 h-4 mr-2" />
+                  )}
+                  Save Credentials
+                </Button>
+
+                <Button
+                  onClick={handleTestConnection}
+                  disabled={testConnectionMutation.isPending || !credentialsQuery.data?.llmApiKey}
+                  className="btn-secondary rounded-xl py-3 px-6"
+                  title="Save credentials first before testing"
+                >
+                  {testConnectionMutation.isPending ? (
+                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  ) : (
+                    <Play className="w-4 h-4 mr-2" />
+                  )}
+                  Test Connection
+                </Button>
+              </div>
             </CardContent>
           </Card>
         </TabsContent>
