@@ -26,32 +26,32 @@ export function AppLayout({ children }: AppLayoutProps) {
         )}
       >
         {/* Decorative gradient line */}
-        <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-indigo-500/50 via-purple-500/30 to-transparent" />
+        <div className="absolute top-0 right-0 w-px h-full bg-gradient-to-b from-emerald-500/50 via-amber-500/30 to-transparent" />
         
         {/* Logo */}
-        <div className="flex items-center justify-between p-5 border-b border-indigo-500/10">
+        <div className="flex items-center justify-between p-5 border-b border-emerald-500/10">
           {sidebarOpen && (
             <div className="flex items-center gap-3 fade-in">
               <div className="relative">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center glow">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500 to-amber-600 flex items-center justify-center glow">
                   <Code2 className="w-5 h-5 text-white" />
                 </div>
-                <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-pulse" />
+                <div className="absolute -top-1 -right-1 w-3 h-3 bg-orange-400 rounded-full animate-pulse" />
               </div>
               <div>
                 <span className="font-bold text-lg text-gradient">GitHub MCP</span>
-                <p className="text-xs text-slate-400">AI-Powered Code Manager</p>
+                <p className="text-xs text-stone-400">AI-Powered Code Manager</p>
               </div>
             </div>
           )}
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="p-2 hover:bg-indigo-500/10 rounded-lg transition-all duration-200 hover:scale-105"
+            className="p-2 hover:bg-emerald-500/10 rounded-lg transition-all duration-200 hover:scale-105"
           >
             {sidebarOpen ? (
-              <X className="w-5 h-5 text-slate-400" />
+              <X className="w-5 h-5 text-stone-400" />
             ) : (
-              <Menu className="w-5 h-5 text-slate-400" />
+              <Menu className="w-5 h-5 text-stone-400" />
             )}
           </button>
         </div>
@@ -68,26 +68,26 @@ export function AppLayout({ children }: AppLayoutProps) {
                 className={cn(
                   "w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 text-left group",
                   isActive 
-                    ? "bg-gradient-to-r from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 text-white" 
-                    : "hover:bg-indigo-500/10 text-slate-300 hover:text-white"
+                    ? "bg-gradient-to-r from-emerald-500/20 to-amber-500/10 border border-emerald-500/30 text-white"
+                    : "hover:bg-emerald-500/10 text-stone-300 hover:text-white"
                 )}
               >
                 <div className={cn(
                   "p-2 rounded-lg transition-all duration-200",
                   isActive 
-                    ? "bg-gradient-to-br from-indigo-500 to-purple-600 text-white" 
-                    : "bg-slate-800/50 text-slate-400 group-hover:bg-indigo-500/20 group-hover:text-indigo-400"
+                    ? "bg-gradient-to-br from-emerald-500 to-amber-600 text-white"
+                    : "bg-stone-800/50 text-stone-400 group-hover:bg-emerald-500/20 group-hover:text-emerald-400"
                 )}>
                   <Icon className="w-4 h-4" />
                 </div>
                 {sidebarOpen && (
                   <div className="slide-in-left">
                     <span className="font-medium text-sm">{item.label}</span>
-                    <p className="text-xs text-slate-500">{item.description}</p>
+                    <p className="text-xs text-stone-500">{item.description}</p>
                   </div>
                 )}
                 {isActive && sidebarOpen && (
-                  <Sparkles className="w-4 h-4 text-cyan-400 ml-auto animate-pulse" />
+                  <Sparkles className="w-4 h-4 text-orange-400 ml-auto animate-pulse" />
                 )}
               </button>
             );
@@ -96,13 +96,13 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Footer */}
         {sidebarOpen && (
-          <div className="border-t border-indigo-500/10 p-4">
+          <div className="border-t border-emerald-500/10 p-4">
             <div className="glass rounded-xl p-4">
               <div className="flex items-center gap-2 mb-2">
                 <Zap className="w-4 h-4 text-yellow-400" />
                 <span className="text-sm font-medium text-white">Pro Tip</span>
               </div>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-stone-400">
                 Use AI Assistant to generate code snippets based on your repository context.
               </p>
             </div>

@@ -11,14 +11,14 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     return (
       <button
         className={cn(
-          "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 focus-visible:ring-offset-2 focus-visible:ring-offset-slate-900 disabled:pointer-events-none disabled:opacity-50",
+          "inline-flex items-center justify-center whitespace-nowrap rounded-lg text-sm font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-emerald-500 focus-visible:ring-offset-2 focus-visible:ring-offset-stone-900 disabled:pointer-events-none disabled:opacity-50",
           {
-            "bg-gradient-to-r from-indigo-500 to-purple-600 text-white hover:from-indigo-600 hover:to-purple-700 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 hover:-translate-y-0.5": variant === "default",
+            "bg-gradient-to-r from-emerald-500 to-amber-600 text-white hover:from-emerald-600 hover:to-amber-700 shadow-lg shadow-emerald-500/25 hover:shadow-emerald-500/40 hover:-translate-y-0.5": variant === "default",
             "bg-gradient-to-r from-red-500 to-rose-600 text-white hover:from-red-600 hover:to-rose-700": variant === "destructive",
-            "border border-indigo-500/30 bg-transparent text-slate-300 hover:bg-indigo-500/10 hover:text-white hover:border-indigo-500/50": variant === "outline",
-            "bg-slate-800 text-slate-300 hover:bg-slate-700 hover:text-white": variant === "secondary",
-            "text-slate-400 hover:bg-indigo-500/10 hover:text-white": variant === "ghost",
-            "text-indigo-400 underline-offset-4 hover:underline hover:text-indigo-300": variant === "link",
+            "border border-emerald-500/30 bg-transparent text-stone-300 hover:bg-emerald-500/10 hover:text-white hover:border-emerald-500/50": variant === "outline",
+            "bg-stone-800 text-stone-300 hover:bg-stone-700 hover:text-white": variant === "secondary",
+            "text-stone-400 hover:bg-emerald-500/10 hover:text-white": variant === "ghost",
+            "text-emerald-400 underline-offset-4 hover:underline hover:text-emerald-300": variant === "link",
           },
           {
             "h-10 px-5 py-2": size === "default",
