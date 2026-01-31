@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { publicProcedure, router } from "./trpc-server";
-import { getUserCredentials, upsertCredentials } from "./db";
-import { encryptValue } from "./encryption";
+import { publicProcedure, router } from "../trpc";
+import { getUserCredentials, upsertCredentials } from "../lib/db";
+import { encryptValue } from "../lib/encryption";
 
 export const credentialsRouter = router({
   /**

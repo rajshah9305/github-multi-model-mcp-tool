@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { router, publicProcedure } from "./trpc-server";
-import { getUserCredentials } from "./db";
-import { createLLMClient, generateCode } from "./llm";
+import { router, publicProcedure } from "../trpc";
+import { getUserCredentials } from "../lib/db";
+import { createLLMClient, generateCode } from "../lib/llm";
 
 export const aiRouter = router({
   generateCode: publicProcedure
