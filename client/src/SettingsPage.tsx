@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,13 @@ export default function SettingsPage() {
 
   const credentialsQuery = trpc.credentials.get.useQuery();
   const saveMutation = trpc.credentials.save.useMutation();
+
+  useEffect(() => {
+    if (credentialsQuery.data) {
+      if (credentialsQuery.data.llmModel) setLlmModel(credentialsQuery.data.llmModel);
+      if (credentialsQuery.data.llmBaseUrl) setLlmBaseUrl(credentialsQuery.data.llmBaseUrl);
+    }
+  }, [credentialsQuery.data]);
 
   const handleSaveCredentials = async () => {
     try {
