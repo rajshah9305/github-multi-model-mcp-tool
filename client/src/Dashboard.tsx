@@ -24,13 +24,13 @@ export default function Dashboard() {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <div className="relative">
-            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-6 glow animate-pulse">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-600 flex items-center justify-center mx-auto mb-6 glow animate-pulse">
               <Code2 className="w-8 h-8 text-white" />
             </div>
-            <div className="absolute inset-0 w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 blur-xl opacity-50 animate-pulse" />
+            <div className="absolute inset-0 w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-600 blur-xl opacity-50 animate-pulse" />
           </div>
-          <Loader2 className="w-8 h-8 animate-spin text-indigo-400 mx-auto mb-4" />
-          <p className="text-slate-400 text-sm">Loading your workspace...</p>
+          <Loader2 className="w-8 h-8 animate-spin text-emerald-400 mx-auto mb-4" />
+          <p className="text-stone-400 text-sm">Loading your workspace...</p>
         </div>
       </div>
     );
@@ -49,7 +49,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-300 text-sm mb-6">
+            <p className="text-stone-300 text-sm mb-6">
               {hasGithubPat.error instanceof Error ? hasGithubPat.error.message : "An error occurred while loading your dashboard"}
             </p>
             <Button
@@ -77,7 +77,7 @@ export default function Dashboard() {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            <p className="text-slate-300">
+            <p className="text-stone-300">
               To use the repository browser and file operations, you need to configure your GitHub Personal Access Token.
             </p>
             <Button
@@ -96,23 +96,23 @@ export default function Dashboard() {
   return (
     <div className="h-full flex flex-col">
       {/* Header */}
-      <div className="glass-dark border-b border-indigo-500/10 p-6">
+      <div className="glass-dark border-b border-emerald-500/10 p-6">
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gradient mb-1">Repository Manager</h1>
-            <p className="text-slate-400 text-sm">Browse, edit, and manage your GitHub repositories with AI assistance</p>
+            <p className="text-stone-400 text-sm">Browse, edit, and manage your GitHub repositories with AI assistance</p>
           </div>
           <div className="flex items-center gap-3">
             {selectedRepo && (
               <div className="flex items-center gap-2 px-4 py-2 glass rounded-xl">
-                <Github className="w-4 h-4 text-indigo-400" />
-                <span className="text-sm text-slate-300">{selectedRepo}</span>
+                <Github className="w-4 h-4 text-emerald-400" />
+                <span className="text-sm text-stone-300">{selectedRepo}</span>
               </div>
             )}
             {selectedBranch && selectedRepo && (
               <div className="flex items-center gap-2 px-4 py-2 glass rounded-xl">
-                <GitBranch className="w-4 h-4 text-cyan-400" />
-                <span className="text-sm text-slate-300">{selectedBranch}</span>
+                <GitBranch className="w-4 h-4 text-orange-400" />
+                <span className="text-sm text-stone-300">{selectedBranch}</span>
               </div>
             )}
           </div>
@@ -122,7 +122,7 @@ export default function Dashboard() {
       {/* Main Content */}
       <div className="flex-1 overflow-hidden flex">
         {/* Left Panel - Repository Browser */}
-        <div className="w-80 glass-dark border-r border-indigo-500/10 overflow-y-auto flex flex-col">
+        <div className="w-80 glass-dark border-r border-emerald-500/10 overflow-y-auto flex flex-col">
           <RepositoryBrowser
             selectedRepo={selectedRepo}
             selectedBranch={selectedBranch}
@@ -137,17 +137,17 @@ export default function Dashboard() {
         <div className="flex-1 overflow-hidden flex flex-col">
           {selectedFile && selectedRepo ? (
             <Tabs defaultValue="editor" className="flex-1 flex flex-col overflow-hidden">
-              <TabsList className="border-b border-indigo-500/10 rounded-none glass-dark px-4 py-2 h-auto gap-2">
+              <TabsList className="border-b border-emerald-500/10 rounded-none glass-dark px-4 py-2 h-auto gap-2">
                 <TabsTrigger 
                   value="editor" 
-                  className="data-[state=active]:bg-indigo-500/20 data-[state=active]:text-white text-slate-400 rounded-lg px-4 py-2 transition-all"
+                  className="data-[state=active]:bg-emerald-500/20 data-[state=active]:text-white text-stone-400 rounded-lg px-4 py-2 transition-all"
                 >
                   <FileCode className="w-4 h-4 mr-2" />
                   Editor
                 </TabsTrigger>
                 <TabsTrigger 
                   value="ai"
-                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-indigo-500/20 data-[state=active]:to-purple-500/20 data-[state=active]:text-white text-slate-400 rounded-lg px-4 py-2 transition-all"
+                  className="data-[state=active]:bg-gradient-to-r data-[state=active]:from-emerald-500/20 data-[state=active]:to-amber-500/20 data-[state=active]:text-white text-stone-400 rounded-lg px-4 py-2 transition-all"
                 >
                   <Sparkles className="w-4 h-4 mr-2" />
                   AI Assistant
@@ -181,7 +181,7 @@ export default function Dashboard() {
                         </CardTitle>
                       </CardHeader>
                       <CardContent>
-                        <p className="text-slate-300 text-sm mb-6">
+                        <p className="text-stone-300 text-sm mb-6">
                           Configure your LLM API key in settings to unlock AI-powered code generation.
                         </p>
                         <Button
@@ -201,27 +201,27 @@ export default function Dashboard() {
             <div className="flex-1 flex items-center justify-center p-8">
               <Card className="glass max-w-lg card-hover text-center">
                 <CardHeader className="pb-4">
-                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-6 glow float">
+                  <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-emerald-500 to-amber-600 flex items-center justify-center mx-auto mb-6 glow float">
                     <Github className="w-10 h-10 text-white" />
                   </div>
                   <CardTitle className="text-2xl text-gradient">Select a Repository</CardTitle>
-                  <CardDescription className="text-slate-400 mt-2">
+                  <CardDescription className="text-stone-400 mt-2">
                     Choose a repository from the sidebar to start browsing files and generating code
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-3 gap-4 mt-4">
                     <div className="p-4 glass rounded-xl text-center">
-                      <FileCode className="w-6 h-6 text-indigo-400 mx-auto mb-2" />
-                      <p className="text-xs text-slate-400">Browse Files</p>
+                      <FileCode className="w-6 h-6 text-emerald-400 mx-auto mb-2" />
+                      <p className="text-xs text-stone-400">Browse Files</p>
                     </div>
                     <div className="p-4 glass rounded-xl text-center">
-                      <Code2 className="w-6 h-6 text-cyan-400 mx-auto mb-2" />
-                      <p className="text-xs text-slate-400">Edit Code</p>
+                      <Code2 className="w-6 h-6 text-orange-400 mx-auto mb-2" />
+                      <p className="text-xs text-stone-400">Edit Code</p>
                     </div>
                     <div className="p-4 glass rounded-xl text-center">
-                      <Sparkles className="w-6 h-6 text-purple-400 mx-auto mb-2" />
-                      <p className="text-xs text-slate-400">AI Generate</p>
+                      <Sparkles className="w-6 h-6 text-amber-400 mx-auto mb-2" />
+                      <p className="text-xs text-stone-400">AI Generate</p>
                     </div>
                   </div>
                 </CardContent>

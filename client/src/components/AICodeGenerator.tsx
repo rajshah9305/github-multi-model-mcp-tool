@@ -58,20 +58,20 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
     <div className="h-full flex flex-col p-6 gap-6 overflow-y-auto fade-in">
       {/* Header */}
       <div className="flex items-center gap-4">
-        <div className="p-3 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 glow-purple">
+        <div className="p-3 rounded-xl bg-gradient-to-br from-amber-500 to-rose-500 glow-amber">
           <Sparkles className="w-6 h-6 text-white" />
         </div>
         <div>
           <h2 className="text-xl font-bold text-gradient">AI Code Assistant</h2>
-          <p className="text-sm text-slate-400">Generate intelligent code suggestions powered by AI</p>
+          <p className="text-sm text-stone-400">Generate intelligent code suggestions powered by AI</p>
         </div>
       </div>
 
       <div className="flex-1 flex flex-col gap-5 min-h-0">
         {/* Model Picker */}
         <div className="glass rounded-xl p-4">
-          <label className="text-sm font-medium text-slate-300 flex items-center gap-2 mb-3">
-            <Cpu className="w-4 h-4 text-cyan-400" />
+          <label className="text-sm font-medium text-stone-300 flex items-center gap-2 mb-3">
+            <Cpu className="w-4 h-4 text-orange-400" />
             AI Model
           </label>
           <Input
@@ -92,7 +92,7 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
             <option value="claude-3-sonnet" />
             <option value="claude-3-haiku" />
           </datalist>
-          <p className="text-xs text-slate-500 mt-2">
+          <p className="text-xs text-stone-500 mt-2">
             {configQuery.data?.model
               ? `Default: ${configQuery.data.model}`
               : "Default: gpt-4o"}
@@ -101,8 +101,8 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
 
         {/* Prompt Input */}
         <div className="glass rounded-xl p-4">
-          <label className="text-sm font-medium text-slate-300 flex items-center gap-2 mb-3">
-            <Brain className="w-4 h-4 text-purple-400" />
+          <label className="text-sm font-medium text-stone-300 flex items-center gap-2 mb-3">
+            <Brain className="w-4 h-4 text-amber-400" />
             What would you like to generate?
           </label>
           <Textarea
@@ -136,7 +136,7 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
         {generatedCode && (
           <div className="flex-1 flex flex-col gap-3 min-h-0 slide-in-right">
             <div className="flex items-center justify-between">
-              <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
+              <label className="text-sm font-medium text-stone-300 flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-yellow-400" />
                 Generated Code
               </label>
@@ -155,7 +155,7 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
               </Button>
             </div>
             <div className="flex-1 code-block p-4 overflow-auto">
-              <pre className="text-slate-100 font-mono text-sm whitespace-pre-wrap break-words">
+              <pre className="text-stone-100 font-mono text-sm whitespace-pre-wrap break-words">
                 {generatedCode}
               </pre>
             </div>
@@ -164,28 +164,28 @@ export function AICodeGenerator({ repo, filePath, branch }: AICodeGeneratorProps
 
         {/* Tips */}
         {!generatedCode && (
-          <Card className="glass border-indigo-500/20 card-hover">
+          <Card className="glass border-emerald-500/20 card-hover">
             <CardHeader className="pb-2">
-              <CardTitle className="text-sm text-slate-300 flex items-center gap-2">
+              <CardTitle className="text-sm text-stone-300 flex items-center gap-2">
                 <Lightbulb className="w-4 h-4 text-yellow-400" />
                 Tips for better results
               </CardTitle>
             </CardHeader>
-            <CardContent className="text-sm text-slate-400 space-y-2">
+            <CardContent className="text-sm text-stone-400 space-y-2">
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 mt-2 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 flex-shrink-0" />
                 <p>Be specific about what you want to generate</p>
               </div>
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-cyan-400 mt-2 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-orange-400 mt-2 flex-shrink-0" />
                 <p>Include the programming language or framework</p>
               </div>
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-purple-400 mt-2 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-amber-400 mt-2 flex-shrink-0" />
                 <p>Mention any specific requirements or constraints</p>
               </div>
               <div className="flex items-start gap-2">
-                <div className="w-1.5 h-1.5 rounded-full bg-pink-400 mt-2 flex-shrink-0" />
+                <div className="w-1.5 h-1.5 rounded-full bg-rose-400 mt-2 flex-shrink-0" />
                 <p>Provide context about the existing codebase</p>
               </div>
             </CardContent>

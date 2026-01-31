@@ -77,11 +77,11 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
     return (
       <div className="flex items-center justify-center h-full">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4 glow animate-pulse">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-emerald-500 to-amber-600 flex items-center justify-center mx-auto mb-4 glow animate-pulse">
             <FileCode className="w-6 h-6 text-white" />
           </div>
-          <Loader2 className="w-6 h-6 animate-spin text-indigo-400 mx-auto mb-2" />
-          <p className="text-slate-400 text-sm">Loading file...</p>
+          <Loader2 className="w-6 h-6 animate-spin text-emerald-400 mx-auto mb-2" />
+          <p className="text-stone-400 text-sm">Loading file...</p>
         </div>
       </div>
     );
@@ -100,7 +100,7 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-slate-300 text-sm">
+            <p className="text-stone-300 text-sm">
               {fileQuery.error instanceof Error ? fileQuery.error.message : "Failed to load file"}
             </p>
           </CardContent>
@@ -114,16 +114,16 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
       {/* Header */}
       <div className="flex items-center justify-between glass rounded-xl p-4">
         <div className="flex items-center gap-4">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20">
-            <FileCode className="w-5 h-5 text-indigo-400" />
+          <div className="p-2 rounded-lg bg-gradient-to-br from-emerald-500/20 to-amber-500/20">
+            <FileCode className="w-5 h-5 text-emerald-400" />
           </div>
           <div>
             <h2 className="text-lg font-semibold text-white">{filePath.split('/').pop()}</h2>
-            <p className="text-xs text-slate-500 font-mono">{filePath}</p>
+            <p className="text-xs text-stone-500 font-mono">{filePath}</p>
           </div>
         </div>
         <div className="flex items-center gap-2">
-          <div className="px-3 py-1 glass rounded-lg text-xs text-slate-400">
+          <div className="px-3 py-1 glass rounded-lg text-xs text-stone-400">
             {lineCount} lines
           </div>
           <Button
@@ -170,8 +170,8 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
       {isEditing ? (
         <div className="flex-1 flex flex-col gap-4 min-h-0">
           <div className="flex-1 flex flex-col gap-2 min-h-0">
-            <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-              <FileCode className="w-4 h-4 text-indigo-400" />
+            <label className="text-sm font-medium text-stone-300 flex items-center gap-2">
+              <FileCode className="w-4 h-4 text-emerald-400" />
               File Content
             </label>
             <Textarea
@@ -183,8 +183,8 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
           </div>
 
           <div className="flex flex-col gap-2">
-            <label className="text-sm font-medium text-slate-300 flex items-center gap-2">
-              <GitCommit className="w-4 h-4 text-cyan-400" />
+            <label className="text-sm font-medium text-stone-300 flex items-center gap-2">
+              <GitCommit className="w-4 h-4 text-orange-400" />
               Commit Message
             </label>
             <Input
@@ -211,11 +211,11 @@ export function CodeEditor({ repo, filePath, branch }: CodeEditorProps) {
       ) : (
         <div className="flex-1 code-block p-4 overflow-auto relative">
           {/* Line numbers */}
-          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-slate-900/50 to-transparent pointer-events-none" />
-          <pre className="text-slate-100 font-mono text-sm whitespace-pre-wrap break-words pl-2">
+          <div className="absolute left-0 top-0 bottom-0 w-12 bg-gradient-to-r from-stone-900/50 to-transparent pointer-events-none" />
+          <pre className="text-stone-100 font-mono text-sm whitespace-pre-wrap break-words pl-2">
             {content.split('\n').map((line, i) => (
               <div key={i} className="flex">
-                <span className="w-10 text-right pr-4 text-slate-600 select-none text-xs">{i + 1}</span>
+                <span className="w-10 text-right pr-4 text-stone-600 select-none text-xs">{i + 1}</span>
                 <span className="flex-1">{line || ' '}</span>
               </div>
             ))}
