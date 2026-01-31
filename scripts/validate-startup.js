@@ -43,12 +43,12 @@ requiredEnvVars.forEach(envVar => {
 // Check critical files
 console.log('\n📁 Critical Files:');
 const criticalFiles = [
-  'package.json',
-  'vite.config.ts',
-  'tsconfig.json',
-  'main.tsx',
-  'App.tsx',
-  'routers.ts',
+  '../package.json',
+  '../client/vite.config.ts',
+  '../tsconfig.json',
+  '../client/src/main.tsx',
+  '../client/src/App.tsx',
+  '../server/routers.ts',
   'setup-db.js'
 ];
 

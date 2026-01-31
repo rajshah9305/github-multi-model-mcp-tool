@@ -1,7 +1,7 @@
 import { z } from "zod";
-import { router, publicProcedure } from "./trpc-server";
-import { getUserCredentials } from "./db";
-import { createGitHubClient, listRepositories, listBranches, getFileContent, listDirectoryContents, updateFile } from "./github";
+import { router, publicProcedure } from "../trpc";
+import { getUserCredentials } from "../lib/db";
+import { createGitHubClient, listRepositories, listBranches, getFileContent, listDirectoryContents, updateFile } from "../lib/github";
 
 export const githubRouter = router({
   listRepositories: publicProcedure.query(async () => {
